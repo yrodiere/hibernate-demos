@@ -1,30 +1,66 @@
-# hsearch-quarkus project
+# `hsearch-quarkus`
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+A demonstration application using Hibernate Search within Quarkus.
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+## Building and running the application in development mode
 
-## Running the application in dev mode
+### Setting up the execution environment
 
-You can run your application in dev mode that enables live coding using:
+Install docker and docker-compose, then run this from the root of the project:
+
 ```
-./mvnw quarkus:dev
+docker-compose -f environment-stack.yml -p hsearch-quarkus-env up
 ```
 
-## Packaging and running the application
+You can later remove the created services and volumes with this command:
 
-The application can be packaged using `./mvnw package`.
-It produces the `hsearch-quarkus-1.0-SNAPSHOT-runner.jar` file in the `/target` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/lib` directory.
+```
+docker-compose -f environment-stack.yml -p hsearch-quarkus-env down -v
+```
 
-The application is now runnable using `java -jar target/hsearch-quarkus-1.0-SNAPSHOT-runner.jar`.
+### Starting the application in development mode
 
-## Creating a native executable
+You must use Java 8.
 
-You can create a native executable using: `./mvnw package -Pnative`.
+Execute the following command:
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: `./mvnw package -Pnative -Dquarkus.native.container-build=true`.
+```
+./mvnw compile quarkus:dev
+```
 
-You can then execute your native executable with: `./target/hsearch-quarkus-1.0-SNAPSHOT-runner`
+## Building and running the application as a native binary in a container
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/building-native-image.
+Build the container containing the native binary with:
+
+```
+./mvnw package -Pnative -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true
+```
+
+Then run the container along with PostgreSQL and Elasticsearch with:
+
+```
+docker-compose -f hsearch-quarkus.yml -p hsearch-quarkus up
+```
+
+You can later remove the created services and volumes with this command:
+
+```
+docker-compose -f hsearch-quarkus.yml -p hsearch-quarkus down -v
+```
+
+## Using the application
+
+The REST service will be available on port 8080.
+See `ClientResource.java` for the API.
+
+Use `curl` to access the service:
+
+```
+curl -X <GET or DELETE> http://localhost:8080/<path>
+```
+
+Or:
+
+```
+curl -X <POST or PUT> http://localhost:8080/<path> -H "Content-Type: application/json" -d '<your json>'
+```
