@@ -2,6 +2,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version "${kotlinVersion}"
     id "org.jetbrains.kotlin.plugin.allopen" version "${kotlinVersion}"
     id "org.jetbrains.kotlin.plugin.jpa" version "${kotlinVersion}"
+    id "org.jetbrains.kotlin.kapt" version "${kotlinVersion}"
     id 'io.quarkus'
     id "com.avast.gradle.docker-compose" version "0.13.2"
 }
@@ -22,6 +23,11 @@ dependencies {
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-resteasy'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "com.github.pozo:mapstruct-kotlin:${mapstructKotlinVersion}"
+    kapt "com.github.pozo:mapstruct-kotlin-processor:${mapstructKotlinVersion}"
+    kapt "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:kotlin-extensions'
@@ -57,6 +63,13 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_11
 }
+
+kapt {
+    arguments {
+        arg("mapstruct.defaultComponentModel", "cdi")
+    }
+}
+
 test {
     systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
 
