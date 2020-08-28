@@ -12,7 +12,7 @@ class TShirtServiceTest {
     @Test
     fun testHelloEndpoint() {
         When {
-            get("/hello")
+            get("/tshirt/search?terms=collaboration")
         } Then {
             statusCode(200)
             body(`is`("hello"))
