@@ -1,0 +1,34 @@
+quarkus.ssl.native: false
+
+quarkus:
+  datasource:
+    db-kind: postgresql
+    jdbc:
+      url: jdbc:postgresql://${POSTGRESQL_HOST}/${POSTGRESQL_DB}
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
+  hibernate-orm:
+    database:
+      generation: update
+  hibernate-search:
+    elasticsearch:
+      version: 7.9
+      hosts: ${ES_HOSTS}
+      protocol: ${ES_PROTOCOL}
+      index-defaults:
+        lifecycle:
+          strategy: create
+      analysis:
+        configurer: org.hibernate.search.demos.quarkuskotlin.search.TShirtAnalysisConfigurer
+
+"%dev":
+  quarkus:
+    hibernate-orm:
+      database:
+        generation: drop-and-create
+      sql-load-script: test-dataset.sql
+    hibernate-search:
+      elasticsearch:
+        schema-management:
+          strategy: drop-and-create
+          required-status: yellow
