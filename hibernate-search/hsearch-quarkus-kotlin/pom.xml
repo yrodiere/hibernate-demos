@@ -18,6 +18,11 @@
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
     <quarkus.platform.version>1.7.1.Final</quarkus.platform.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+
+    <test.env.postgresql.version>12.0</test.env.postgresql.version>
+    <test.env.postgresql.image>postgres:${test.env.postgresql.version}</test.env.postgresql.image>
+    <test.env.elasticsearch.version>7.9.0</test.env.elasticsearch.version>
+    <test.env.elasticsearch.image>docker.elastic.co/elasticsearch/elasticsearch:${test.env.elasticsearch.version}</test.env.elasticsearch.image>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -190,6 +195,101 @@
       <properties>
         <quarkus.package.type>native</quarkus.package.type>
       </properties>
+    </profile>
+
+    <profile>
+      <id>docker</id>
+      <activation>
+        <property>
+          <name>docker</name>
+        </property>
+      </activation>
+      <properties>
+        <test.config.postgresql.host>localhost</test.config.postgresql.host>
+        <test.config.postgresql.database>quarkus_test</test.config.postgresql.database>
+        <test.config.postgresql.username>quarkus_test</test.config.postgresql.username>
+        <test.config.postgresql.password>quarkus_test</test.config.postgresql.password>
+        <test.config.elasticsearch.hosts>localhost:9200</test.config.elasticsearch.hosts>
+        <test.config.elasticsearch.protocol>http</test.config.elasticsearch.protocol>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <configuration>
+              <images>
+                <image>
+                  <name>${test.env.postgresql.image}</name>
+                  <alias>postgresql</alias>
+                  <run>
+                    <env>
+                      <POSTGRES_USER>${test.config.datasource.username}</POSTGRES_USER>
+                      <POSTGRES_PASSWORD>${test.config.datasource.password}</POSTGRES_PASSWORD>
+                      <POSTGRES_DB>${test.config.datasource.jdbc.database}</POSTGRES_DB>
+                    </env>
+                    <ports>
+                      <port>5431:5432</port>
+                    </ports>
+                    <wait>
+                      <tcp>
+                        <mode>mapped</mode>
+                        <ports>
+                          <port>5432</port>
+                        </ports>
+                      </tcp>
+                      <time>10000</time>
+                    </wait>
+                  </run>
+                </image>
+                <image>
+                  <name>${test.env.elasticsearch.image}</name>
+                  <alias>elasticsearch</alias>
+                  <run>
+                    <env>
+                      <discovery.type>single-node</discovery.type>
+                    </env>
+                    <ports>
+                      <port>9200:9200</port>
+                    </ports>
+                    <log>
+                      <prefix>Elasticsearch: </prefix>
+                      <date>default</date>
+                      <color>cyan</color>
+                    </log>
+                    <wait>
+                      <http>
+                        <url>http://localhost:9200</url>
+                        <method>GET</method>
+                        <status>200</status>
+                      </http>
+                      <time>20000</time>
+                    </wait>
+                  </run>
+                </image>
+              </images>
+              <allContainers>true</allContainers>
+            </configuration>
+            <executions>
+              <execution>
+                <id>docker-start</id>
+                <phase>process-test-classes</phase>
+                <goals>
+                  <goal>stop</goal>
+                  <goal>start</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>docker-stop</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>stop</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>
