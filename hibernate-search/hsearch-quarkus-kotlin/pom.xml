@@ -19,6 +19,9 @@
     <quarkus.platform.version>1.7.1.Final</quarkus.platform.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
 
+    <org.mapstruct.version>1.4.0.Beta3</org.mapstruct.version>
+    <com.github.pozo.mapstruct-kotlin.version>1.4.0.0</com.github.pozo.mapstruct-kotlin.version>
+
     <test.env.postgresql.version>12.0</test.env.postgresql.version>
     <test.env.postgresql.image>postgres:${test.env.postgresql.version}</test.env.postgresql.image>
     <test.env.elasticsearch.version>7.9.0</test.env.elasticsearch.version>
@@ -82,6 +85,17 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-config-yaml</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${org.mapstruct.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.pozo</groupId>
+      <artifactId>mapstruct-kotlin</artifactId>
+      <version>${com.github.pozo.mapstruct-kotlin.version}</version>
+    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src/main/kotlin</sourceDirectory>
@@ -120,6 +134,30 @@
         <artifactId>kotlin-maven-plugin</artifactId>
         <version>${kotlin.version}</version>
         <executions>
+          <execution>
+            <id>kapt</id>
+            <goals>
+              <goal>kapt</goal>
+            </goals>
+            <configuration>
+              <sourceDirs>
+                <sourceDir>src/main/kotlin</sourceDir>
+                <sourceDir>src/main/java</sourceDir>
+              </sourceDirs>
+              <annotationProcessorPaths>
+                <annotationProcessorPath>
+                  <groupId>com.github.pozo</groupId>
+                  <artifactId>mapstruct-kotlin-processor</artifactId>
+                  <version>${com.github.pozo.mapstruct-kotlin.version}</version>
+                </annotationProcessorPath>
+                <annotationProcessorPath>
+                  <groupId>org.mapstruct</groupId>
+                  <artifactId>mapstruct-processor</artifactId>
+                  <version>${org.mapstruct.version}</version>
+                </annotationProcessorPath>
+              </annotationProcessorPaths>
+            </configuration>
+          </execution>
           <execution>
             <id>compile</id>
             <goals>
