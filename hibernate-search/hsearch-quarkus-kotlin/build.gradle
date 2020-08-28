@@ -3,6 +3,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.allopen" version "${kotlinVersion}"
     id "org.jetbrains.kotlin.plugin.jpa" version "${kotlinVersion}"
     id 'io.quarkus'
+    id "com.avast.gradle.docker-compose" version "0.13.2"
 }
 
 repositories {
@@ -58,4 +59,48 @@ compileTestKotlin {
 }
 test {
     systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+
+    if (project.hasProperty("docker")) {
+        environment "POSTGRESQL_HOST", "localhost"
+        environment "POSTGRESQL_DB", "hsearch_demo"
+        environment "POSTGRESQL_USERNAME", "hsearch_demo"
+        environment "POSTGRESQL_PASSWORD", "hsearch_demo"
+        environment "ES_HOSTS", "localhost:9200"
+        environment "ES_PROTOCOL", "http"
+    }
+}
+
+dockerCompose {
+    useComposeFiles = ['test-environment.yml']
+}
+
+if (project.hasProperty("docker")) {
+    dockerCompose.isRequiredBy(test)
+    dockerCompose.isRequiredBy(quarkusDev)
+
+    tasks.test.configure {
+        it.environment "POSTGRESQL_HOST", "localhost"
+        it.environment "POSTGRESQL_DB", "hsearch_demo"
+        it.environment "POSTGRESQL_USERNAME", "hsearch_demo"
+        it.environment "POSTGRESQL_PASSWORD", "hsearch_demo"
+        it.environment "ES_HOSTS", "localhost:9200"
+        it.environment "ES_PROTOCOL", "http"
+    }
+    def envFile = file(".env")
+    tasks.quarkusDev.with {
+        it.doFirst {
+            envFile.deleteOnExit()
+            envFile.text = """
+POSTGRESQL_HOST=localhost
+POSTGRESQL_DB=hsearch_demo
+POSTGRESQL_USERNAME=hsearch_demo
+POSTGRESQL_PASSWORD=hsearch_demo
+ES_HOSTS=localhost:9200
+ES_PROTOCOL=http
+"""
+        }
+        it.doLast {
+            envFile.delete()
+        }
+    }
 }

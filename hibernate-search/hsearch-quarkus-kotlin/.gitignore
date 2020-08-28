@@ -31,3 +31,6 @@ nb-configuration.xml
 # Gradle
 .gradle/
 build/
+
+# Quarkus environment (for the quarkusDev task)
+.env

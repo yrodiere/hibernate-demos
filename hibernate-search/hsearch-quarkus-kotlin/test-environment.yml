@@ -1,0 +1,46 @@
+version: '3.4'
+services:
+  pg01:
+    image: postgres:12.0
+    environment:
+      - POSTGRES_USER=hsearch_demo
+      - POSTGRES_PASSWORD=hsearch_demo
+      - POSTGRES_DB=hsearch_demo
+    volumes:
+      - pgdata01:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - pgnet
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.0
+    environment:
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata01:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 5s
+      timeout: 1s
+      retries: 3
+      start_period: 5s
+    ports:
+      - 9200:9200
+    networks:
+      - esnet
+
+volumes:
+  pgdata01:
+    driver: local
+  esdata01:
+    driver: local
+  esdata02:
+    driver: local
+
+networks:
+  esnet:
+  pgnet:
