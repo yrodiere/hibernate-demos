@@ -215,6 +215,34 @@
       <build>
         <plugins>
           <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${surefire-plugin.version}</version>
+            <configuration>
+              <environmentVariables>
+                <POSTGRESQL_HOST>${test.config.postgresql.host}</POSTGRESQL_HOST>
+                <POSTGRESQL_DB>${test.config.postgresql.database}</POSTGRESQL_DB>
+                <POSTGRESQL_USERNAME>${test.config.postgresql.username}</POSTGRESQL_USERNAME>
+                <POSTGRESQL_PASSWORD>${test.config.postgresql.password}</POSTGRESQL_PASSWORD>
+                <ES_HOSTS>${test.config.elasticsearch.hosts}</ES_HOSTS>
+                <ES_PROTOCOL>${test.config.elasticsearch.protocol}</ES_PROTOCOL>
+              </environmentVariables>
+            </configuration>
+          </plugin>
+          <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>${surefire-plugin.version}</version>
+            <configuration>
+              <environmentVariables>
+                <POSTGRESQL_HOST>${test.config.postgresql.host}</POSTGRESQL_HOST>
+                <POSTGRESQL_DB>${test.config.postgresql.database}</POSTGRESQL_DB>
+                <POSTGRESQL_USERNAME>${test.config.postgresql.username}</POSTGRESQL_USERNAME>
+                <POSTGRESQL_PASSWORD>${test.config.postgresql.password}</POSTGRESQL_PASSWORD>
+                <ES_HOSTS>${test.config.elasticsearch.hosts}</ES_HOSTS>
+                <ES_PROTOCOL>${test.config.elasticsearch.protocol}</ES_PROTOCOL>
+              </environmentVariables>
+            </configuration>
+          </plugin>
+          <plugin>
             <groupId>io.fabric8</groupId>
             <artifactId>docker-maven-plugin</artifactId>
             <configuration>
