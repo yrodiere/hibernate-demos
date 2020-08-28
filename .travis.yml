@@ -5,17 +5,19 @@ jdk:
   - openjdk11
 env:
   global:
-    - PROJECTS=$( find hibernate-search -name pom.xml -print -or -path '*/target/*' -prune | sort | xargs -n 1 dirname )
+    - MAVEN_PROJECTS=$( find hibernate-search -name pom.xml -print -or -path '*/target/*' -prune | sort | xargs -n 1 dirname )
+    - GRADLE_PROJECTS=$( find hibernate-search -name gradlew -print | sort | xargs -n 1 dirname )
 cache:
   directories:
     - $HOME/.m2
+    - $HOME/.gradle
 install:
   # The Maven install provided by Travis is outdated, use Maven wrapper to get the latest version
   - mvn -N io.takari:maven:wrapper
   - ./mvnw -v
   # first run to download all the Maven dependencies without logging
   - MVNW=$( readlink -f ./mvnw ) ;
-    for project in $PROJECTS ;
+    for project in $MAVEN_PROJECTS ;
     do
         pushd "$project" ;
         $MVNW -B -q clean dependency:resolve || exit $? ;
@@ -24,9 +26,15 @@ install:
 script:
   # Tests are skipped, because for most demos they require a specific environment
   - MVNW=$( readlink -f ./mvnw ) ;
-    for project in $PROJECTS ;
+    for project in $MAVEN_PROJECTS ;
     do
         pushd "$project" ;
         $MVNW clean package -DskipTests || exit $? ;
+        popd ;
+    done
+  - for project in $GRADLE_PROJECTS ;
+    do
+        pushd "$project" ;
+        ./gradlew build -x test || exit $? ;
         popd ;
     done
