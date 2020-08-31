@@ -8,6 +8,7 @@ quarkus.datasource:
   password: ${POSTGRESQL_PASSWORD}
 
 quarkus.hibernate-orm:
+  dialect: org.hibernate.dialect.PostgreSQL10Dialect
   database.generation: update
 
 "%dev":
