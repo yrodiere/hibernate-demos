@@ -21,8 +21,6 @@
 
     <test.env.postgresql.version>12.0</test.env.postgresql.version>
     <test.env.postgresql.image>postgres:${test.env.postgresql.version}</test.env.postgresql.image>
-    <test.env.elasticsearch.version>7.9.0</test.env.elasticsearch.version>
-    <test.env.elasticsearch.image>docker.elastic.co/elasticsearch/elasticsearch:${test.env.elasticsearch.version}</test.env.elasticsearch.image>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -53,10 +51,6 @@
       <groupId>io.rest-assured</groupId>
       <artifactId>kotlin-extensions</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-hibernate-search-elasticsearch</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -209,8 +203,6 @@
         <test.config.postgresql.database>quarkus_test</test.config.postgresql.database>
         <test.config.postgresql.username>quarkus_test</test.config.postgresql.username>
         <test.config.postgresql.password>quarkus_test</test.config.postgresql.password>
-        <test.config.elasticsearch.hosts>localhost:9200</test.config.elasticsearch.hosts>
-        <test.config.elasticsearch.protocol>http</test.config.elasticsearch.protocol>
       </properties>
       <build>
         <plugins>
@@ -223,8 +215,6 @@
                 <POSTGRESQL_DB>${test.config.postgresql.database}</POSTGRESQL_DB>
                 <POSTGRESQL_USERNAME>${test.config.postgresql.username}</POSTGRESQL_USERNAME>
                 <POSTGRESQL_PASSWORD>${test.config.postgresql.password}</POSTGRESQL_PASSWORD>
-                <ES_HOSTS>${test.config.elasticsearch.hosts}</ES_HOSTS>
-                <ES_PROTOCOL>${test.config.elasticsearch.protocol}</ES_PROTOCOL>
               </environmentVariables>
             </configuration>
           </plugin>
@@ -237,8 +227,6 @@
                 <POSTGRESQL_DB>${test.config.postgresql.database}</POSTGRESQL_DB>
                 <POSTGRESQL_USERNAME>${test.config.postgresql.username}</POSTGRESQL_USERNAME>
                 <POSTGRESQL_PASSWORD>${test.config.postgresql.password}</POSTGRESQL_PASSWORD>
-                <ES_HOSTS>${test.config.elasticsearch.hosts}</ES_HOSTS>
-                <ES_PROTOCOL>${test.config.elasticsearch.protocol}</ES_PROTOCOL>
               </environmentVariables>
             </configuration>
           </plugin>
@@ -267,31 +255,6 @@
                         </ports>
                       </tcp>
                       <time>10000</time>
-                    </wait>
-                  </run>
-                </image>
-                <image>
-                  <name>${test.env.elasticsearch.image}</name>
-                  <alias>elasticsearch</alias>
-                  <run>
-                    <env>
-                      <discovery.type>single-node</discovery.type>
-                    </env>
-                    <ports>
-                      <port>9200:9200</port>
-                    </ports>
-                    <log>
-                      <prefix>Elasticsearch: </prefix>
-                      <date>default</date>
-                      <color>cyan</color>
-                    </log>
-                    <wait>
-                      <http>
-                        <url>http://localhost:9200</url>
-                        <method>GET</method>
-                        <status>200</status>
-                      </http>
-                      <time>20000</time>
                     </wait>
                   </run>
                 </image>
