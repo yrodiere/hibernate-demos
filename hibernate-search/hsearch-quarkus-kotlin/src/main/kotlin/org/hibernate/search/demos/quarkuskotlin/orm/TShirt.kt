@@ -4,7 +4,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextFi
 import javax.persistence.*
 
 @Entity
-class TShirt {
+class TShirt() {
     @Id
     @GeneratedValue
     var id: Long? = null
