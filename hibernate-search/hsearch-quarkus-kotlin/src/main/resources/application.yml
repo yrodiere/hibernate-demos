@@ -1,14 +1,10 @@
 quarkus.ssl.native: false
 
-quarkus.datasource:
-  db-kind: postgresql
-  jdbc.url: jdbc:postgresql://${POSTGRESQL_HOST}/${POSTGRESQL_DB}
-  driver: org.postgresql.Driver
-  username: ${POSTGRESQL_USERNAME}
-  password: ${POSTGRESQL_PASSWORD}
+quarkus.datasource.db-kind: h2
+quarkus.datasource.jdbc.url: jdbc:h2:mem:test
 
 quarkus.hibernate-orm:
-  dialect: org.hibernate.dialect.PostgreSQL10Dialect
+  dialect: org.hibernate.dialect.H2Dialect
   database.generation: update
 
 "%dev":
