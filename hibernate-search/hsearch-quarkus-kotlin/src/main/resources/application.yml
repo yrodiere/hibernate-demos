@@ -1,6 +1,7 @@
 quarkus.ssl.native: false
 
 quarkus.datasource:
+  db-kind: postgresql
   url: jdbc:postgresql://${POSTGRESQL_HOST}/${POSTGRESQL_DB}
   driver: org.postgresql.Driver
   username: ${POSTGRESQL_USERNAME}
