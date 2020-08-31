@@ -69,10 +69,6 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-orm-panache-kotlin</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-config-yaml</artifactId>
-    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src/main/kotlin</sourceDirectory>
