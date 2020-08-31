@@ -10,6 +10,5 @@ class TShirt() {
 
     lateinit var name: String
 
-    @Enumerated(EnumType.STRING)
     lateinit var color: Color
 }
