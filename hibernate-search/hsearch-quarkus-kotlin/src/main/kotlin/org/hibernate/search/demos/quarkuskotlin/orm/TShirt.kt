@@ -10,5 +10,4 @@ class TShirt() {
 
     lateinit var name: String
 
-    lateinit var color: Color
 }
