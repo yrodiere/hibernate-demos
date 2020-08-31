@@ -3,7 +3,7 @@ package org.hibernate.search.demos.quarkuskotlin.orm
 import javax.persistence.*
 
 @Entity
-class TShirt() {
+open class TShirt() {
     @Id
     @GeneratedValue
     var id: Long? = null
