@@ -37,3 +37,4 @@ logging.level:
   org.hibernate.search.query: TRACE
   #org.hibernate.search.elasticsearch.request: DEBUG
   #org.hibernate.search.engine.backend.orchestration.spi: DEBUG
+  org.hibernate.search.engine.backend.orchestration.spi.BatchingExecutor: TRACE
