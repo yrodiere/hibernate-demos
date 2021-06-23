@@ -19,10 +19,16 @@ spring.jpa.properties:
   hibernate.search:
     schema_management.strategy: create-or-validate
     backend:
-      hosts: localhost:9200
-      protocol: http
-      discovery.enabled: true
-      analysis.configurer: analysisConfigurerSpringBean
+      type: lucene
+      directory:
+        root: "target/indexes/"
+      analysis.configurer: luceneAnalysisConfigurerSpringBean
+#    backend:
+#      type: elasticsearch
+#      hosts: localhost:9200
+#      protocol: http
+#      discovery.enabled: true
+#      analysis.configurer: esAnalysisConfigurerSpringBean
 
 spring.jackson:
   serialization:

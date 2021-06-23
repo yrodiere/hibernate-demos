@@ -11,7 +11,7 @@ import org.hibernate.search.backend.elasticsearch.analysis.ElasticsearchAnalysis
 
 import org.springframework.stereotype.Component;
 
-@Component("analysisConfigurerSpringBean")
+@Component("esAnalysisConfigurerSpringBean")
 public class HsearchElasticsearchWikipediaAnalysisConfigurer implements ElasticsearchAnalysisConfigurer {
 	@Override
 	public void configure(ElasticsearchAnalysisConfigurationContext context) {
